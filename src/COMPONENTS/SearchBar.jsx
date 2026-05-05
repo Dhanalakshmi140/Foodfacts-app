@@ -6,20 +6,21 @@ function SearchBar({ onSearch }) {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if (query.trim()) {
-      onSearch(query)
-    }
+    if (!query.trim()) return
+
+    onSearch(query)
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Search food..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search food..."
       />
-      <button>Search</button>
+
+      <button type="submit">Search</button>
     </form>
   )
 }
