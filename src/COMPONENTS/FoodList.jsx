@@ -1,17 +1,12 @@
-import FoodCard from "./FoodCard"
+import FoodCard from './FoodCard'
 
 function FoodList({ products }) {
-  if (!products.length) {
-    return <p>No results found. Try a different search.</p>
-  }
+  if (!products.length) return <p>No results</p>
 
   return (
-    <div className="food-list">
-      {products.map((product) => (
-        <FoodCard
-          key={product.code}
-          product={product}
-        />
+    <div>
+      {products.map(p => (
+        <FoodCard key={p.code} product={p} />
       ))}
     </div>
   )
