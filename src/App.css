@@ -1,0 +1,131 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f6f7fb;
+  color: #222;
+}
+
+.page {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: #111;
+  color: white;
+}
+
+.nav-links a {
+  color: white;
+  margin-left: 15px;
+  text-decoration: none;
+}
+
+.nav-links a.active {
+  border-bottom: 2px solid #00ff99;
+  padding-bottom: 3px;
+}
+
+/* =========================
+   SEARCH BAR
+========================= */
+
+input {
+  padding: 10px;
+  width: 70%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+}
+
+button {
+  padding: 10px 15px;
+  margin-left: 10px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #333;
+}
+
+/* =========================
+   FOOD CARD (MAIN UI)
+========================= */
+
+.food-card {
+  background: white;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.food-card:hover {
+  transform: scale(1.02);
+}
+
+/* =========================
+   DETAIL PAGE
+========================= */
+
+.detail-page {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   ERROR MESSAGE
+========================= */
+
+.error-message {
+  background: #ffe5e5;
+  color: #b30000;
+  padding: 10px;
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+/* =========================
+   VALIDATION ERROR
+========================= */
+
+.validation-error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* =========================
+   BADGE (SAVED COUNT)
+========================= */
+
+.badge {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 8px;
+  font-size: 12px;
+  margin-left: 5px;
+}
