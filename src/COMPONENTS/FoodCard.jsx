@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 function FoodCard({ product }) {
   const navigate = useNavigate()
 
+<<<<<<< HEAD
   return (
     <div
       onClick={() =>
@@ -17,6 +18,14 @@ function FoodCard({ product }) {
         cursor: "pointer",
       }}
     >
+=======
+  const handleClick = () => {
+    navigate(`/product/${product.code}`)
+  }
+
+  return (
+    <div onClick={handleClick} style={{ cursor: "pointer" }}>
+>>>>>>> origin/main
       <h3>{product.product_name}</h3>
       <p>{product.brands}</p>
     </div>
