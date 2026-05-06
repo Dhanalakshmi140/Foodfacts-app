@@ -1,29 +1,25 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardActionArea from '@mui/material/CardActionArea'
-import Typography from '@mui/material/Typography'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom"
 
 function FoodCard({ product }) {
   const navigate = useNavigate()
 
   return (
-    <Card>
-      <CardActionArea
-        onClick={() =>
-          navigate(`/product/${product.id}`, { state: { product } })
-        }
-      >
-        <CardContent>
-          <Typography variant="h6">
-            {product.product_name || 'Unknown'}
-          </Typography>
-          <Typography color="text.secondary">
-            {product.brands || 'Unknown Brand'}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <div
+      onClick={() =>
+        navigate(`/product/${product.id}`, {
+          state: { product },
+        })
+      }
+      style={{
+        border: "1px solid #ddd",
+        padding: "12px",
+        margin: "10px",
+        cursor: "pointer",
+      }}
+    >
+      <h3>{product.product_name}</h3>
+      <p>{product.brands}</p>
+    </div>
   )
 }
 
