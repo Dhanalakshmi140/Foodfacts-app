@@ -1,101 +1,115 @@
-import { useState } from "react"
-import SearchBar from "../components/SearchBar"
-import FoodList from "../components/FoodList"
-import ErrorMessage from "../components/ErrorMessage"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addItem } from "../redux/savedSlice";
 
 function HomePage() {
-  const [results, setResults] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [foods, setFoods] = useState([]);
+  const [query, setQuery] = useState("");
 
-  const handleSearch = async (query) => {
-    setLoading(true)
-    setError("")
-    setResults([])
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      alert("Enter something");
+      return;
+    }
 
     try {
-      const url = `/api/cgi/search.pl?search_terms=${encodeURIComponent(
-        query
-      )}&json=1&page_size=10`
+      const response = await fetch(
+        `/api/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=20`
+      );
 
-      const res = await fetch(url)
+      const data = await response.json();
 
-      if (!res.ok) {
-        throw new Error("API failed")
-      }
-
-      const data = await res.json()
-
-      const filtered = (data.products || []).filter(
-        (p) => p.product_name && p.product_name.trim() !== ""
-      )
-
-      if (filtered.length === 0) {
-        throw new Error("No results")
-      }
-
-      setResults(filtered)
-
-    } catch (err) {
-      console.log("API Error:", err)
-
-      // ✅ fallback data
-      const fallback = [
-        {
-          id: "1",
-          product_name: "Dosa",
-          brands: "Indian Food",
-          nutriments: {
-            energy: 150,
-            proteins: 4,
-            fat: 3,
-            sugars: 1,
-          },
-        },
-        {
-          id: "2",
-          product_name: "Rice",
-          brands: "Staple Food",
-          nutriments: {
-            energy: 130,
-            proteins: 2,
-            fat: 0.5,
-            sugars: 0,
-          },
-        },
-      ]
-
-      setResults(fallback)
-      setError("Showing sample data (API temporarily unavailable)")
-    } finally {
-      setLoading(false)
+      setFoods(data.products || []);
+    } catch (error) {
+      console.error(error);
+      alert("Search failed");
     }
-  }
+  };
 
-  // ✅ IMPORTANT: return must be OUTSIDE handleSearch
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "20px" }}>
-      <h2 style={{ textAlign: "center" }}>🥗 FoodFacts</h2>
+    <div>
+      {/* Search */}
+      <input
+        type="text"
+        placeholder="Search food..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        style={{
+          padding: "10px",
+          marginRight: "10px",
+          borderRadius: "8px",
+        }}
+      />
 
-      <SearchBar onSearch={handleSearch} />
+      <button
+        onClick={handleSearch}
+        style={{
+          padding: "10px 15px",
+          borderRadius: "8px",
+          border: "none",
+          background: "orange",
+          cursor: "pointer",
+        }}
+      >
+        Search
+      </button>
 
-      {loading && (
-        <p style={{ textAlign: "center" }}>
-          🔄 Fetching food data...
-        </p>
-      )}
+      {/* Count */}
+      <p>Total items: {foods.length}</p>
 
-      {error && <ErrorMessage message={error} />}
+      {/* Food Cards */}
+      {foods.map((item) => (
+        <div
+          key={item.code}
+          className="food-card"
+          style={{
+            border: "1px solid #ccc",
+            borderRadius: "12px",
+            padding: "15px",
+            margin: "15px",
+            background: "white",
+          }}
+        >
+          {/* Clickable area */}
+          <div
+            onClick={() =>
+              item.code && navigate(`/product/${item.code}`)
+            }
+            style={{ cursor: "pointer" }}
+          >
+            <img
+              src={
+                item.image_front_thumb_url ||
+                "https://via.placeholder.com/100"
+              }
+              alt={item.product_name}
+              width="100"
+            />
 
-      {!loading && !error && results.length === 0 && (
-        <p style={{ textAlign: "center" }}>
-          Search food like dosa, apple, rice 🍎
-        </p>
-      )}
+            <p>{item.product_name || "No Name"}</p>
+          </div>
 
-      <FoodList products={results} />
+          {/* Save button */}
+          <button
+            onClick={() => dispatch(addItem(item))}
+            style={{
+              padding: "8px 15px",
+              background: "orange",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
+          >
+            Save
+          </button>
+        </div>
+      ))}
     </div>
-  )
+  );
 }
 
-export default HomePage
+export default HomePage;

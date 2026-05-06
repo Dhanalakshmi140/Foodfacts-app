@@ -1,41 +1,34 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function DetailPage() {
-  const location = useLocation()
-  const navigate = useNavigate()
+  const { barcode } = useParams();
+  const navigate = useNavigate();
+  const [product, setProduct] = useState(null);
 
-  const product = location.state?.product
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const res = await fetch(
+        `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`
+      );
+      const data = await res.json();
+      setProduct(data.product);
+    };
 
-  // ✅ Better fallback UI
-  if (!product) {
-    return (
-      <div style={{ padding: "20px", textAlign: "center" }}>
-        <h2>⚠ Product not found</h2>
-        <p>Please go back and select a product again.</p>
-        <button onClick={() => navigate("/")}>⬅ Go to Search</button>
-      </div>
-    )
-  }
+    fetchProduct();
+  }, [barcode]);
+
+  if (!product) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: "20px", maxWidth: "700px", margin: "auto" }}>
+    <div>
+      <h2>{product.product_name}</h2>
+      <p>Brand: {product.brands}</p>
+      <p>Category: {product.categories}</p>
+
       <button onClick={() => navigate(-1)}>⬅ Back</button>
-
-      <h2>{product.product_name || "Unknown Product"}</h2>
-      <p>{product.brands || "Unknown Brand"}</p>
-
-      <h3>Nutrition (per 100g)</h3>
-
-      <p>Calories: {product.nutriments?.["energy-kcal_100g"] || "N/A"} kcal</p>
-      <p>Fat: {product.nutriments?.fat_100g || "N/A"} g</p>
-      <p>Sugar: {product.nutriments?.sugars_100g || "N/A"} g</p>
-      <p>Protein: {product.nutriments?.proteins_100g || "N/A"} g</p>
     </div>
-  )
+  );
 }
 
-<button onClick={() => dispatch({ type: "ADD", product })}>
-  Save
-</button>
-
-export default DetailPage
+export default DetailPage;

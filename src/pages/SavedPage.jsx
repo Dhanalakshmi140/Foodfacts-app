@@ -1,50 +1,41 @@
-import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux";
 
-function SavedPage({ saved, dispatch }) {
-  const navigate = useNavigate()
-
-  if (saved.length === 0) {
-    return (
-      <div>
-        <h2>Saved Items</h2>
-        <p>No saved products yet.</p>
-      </div>
-    )
-  }
+function SavedPage() {
+  const savedItems = useSelector((state) => state.saved.items);
 
   return (
     <div>
-      <h2>Saved Items ({saved.length})</h2>
+      <h2>Saved Items</h2>
 
-      {saved.map((product) => (
-        <div
-          key={product.code}
-          style={{
-            border: "1px solid #ccc",
-            padding: "10px",
-            marginBottom: "10px",
-            cursor: "pointer"
-          }}
-        >
-          <h3>{product.product_name}</h3>
-          <p>{product.brands}</p>
-
-          {/* BUTTONS */}
-          <button onClick={() => navigate(`/product/${product.code}`)}>
-            View Details
-          </button>
-
-          <button
-            onClick={() =>
-              dispatch({ type: "REMOVE", code: product.code })
-            }
+      {savedItems.length === 0 ? (
+        <p>No saved items yet</p>
+      ) : (
+        savedItems.map((item) => (
+          <div
+            key={item.code}
+            style={{
+              border: "1px solid gray",
+              margin: "10px",
+              padding: "10px",
+              borderRadius: "10px",
+              background: "white",
+            }}
           >
-            Remove
-          </button>
-        </div>
-      ))}
+            <img
+              src={
+                item.image_front_thumb_url ||
+                "https://via.placeholder.com/100"
+              }
+              alt={item.product_name}
+              width="100"
+            />
+
+            <p>{item.product_name}</p>
+          </div>
+        ))
+      )}
     </div>
-  )
+  );
 }
 
-export default SavedPage
+export default SavedPage;
